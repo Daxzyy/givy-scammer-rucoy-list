@@ -129,7 +129,7 @@ label {
   border-radius: 6px;
   background: #2a0f0f;
   color: #e8f5e9;
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Segoe UI', Arial, sans-serif;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s ease;
@@ -178,7 +178,7 @@ select {
   border-radius: 6px;
   background: #2a0f0f;
   color: #e8f5e9;
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Segoe UI', Arial, sans-serif;
   font-size: 14px;
   box-sizing: border-box;
   outline: none;
@@ -200,7 +200,7 @@ button {
   outline: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   border-radius: 8px;
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Segoe UI', Arial, sans-serif;
   font-size: 15px;
   cursor: pointer;
   color: white;
