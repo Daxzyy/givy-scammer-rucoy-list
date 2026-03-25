@@ -102,7 +102,6 @@
           </div>
           <div class="drop-info">
             <p class="drop-name">{{ item.name }}</p>
-            <p class="drop-date">Huruf: {{ item.letter }}</p>
           </div>
           <div class="drop-badge" [class.scam-badge]="item.tag === 'S'" [class.warn-badge]="item.tag === 'W'">
             {{ getTagLabel(item.tag) }}
@@ -125,10 +124,6 @@
             <div class="detail-row" *ngIf="item.detail">
               <span class="detail-label">Detail:</span>
               <span class="detail-value">{{ item.detail }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Inisial:</span>
-              <span class="detail-value">{{ item.letter }}</span>
             </div>
           </div>
         </div>
