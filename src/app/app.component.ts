@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-interface Scammer {
-  name: string;
-  tag: string;
-  detail?: string;
-  letter: string;
-}
+import { ScammerService, Scammer } from './scammer.service';
 
 @Component({
   selector: 'app-root',
@@ -20,48 +13,23 @@ interface Scammer {
 export class AppComponent implements OnInit {
   allScammers: Scammer[] = [];
   filteredScammers: Scammer[] = [];
-  displayedScammers: Scammer[] = [];
   expandedIndex: number | null = null;
   showHelp = false;
   searchQuery = '';
   filterTag = 'all';
   filterLetter = 'all';
-
   letters: string[] = [];
-
   stats = { total: 0, scammer: 0, warning: 0 };
 
-  constructor(private http: HttpClient) {}
+  constructor(private scammerService: ScammerService) {}
 
   ngOnInit() {
     this.loadData();
   }
 
   loadData() {
-    this.http.get<Record<string, { name: string; tag: string; detail?: string }[]>>('scammer_list.json', { headers: { 'Cache-Control': 'no-store' } })
-      .subscribe({
-        next: (data) => {
-          this.processData(data);
-        },
-        error: () => {
-          console.error('Failed to load scammer list');
-        }
-      });
-  }
-
-  processData(data: Record<string, { name: string; tag: string; detail?: string }[]>) {
-    const result: Scammer[] = [];
-    const letterSet = new Set<string>();
-
-    for (const letter of Object.keys(data)) {
-      letterSet.add(letter);
-      for (const item of data[letter]) {
-        result.push({ ...item, letter });
-      }
-    }
-
-    this.allScammers = result;
-    this.letters = Array.from(letterSet).sort();
+    this.allScammers = this.scammerService.getData();
+    this.letters = [...new Set(this.allScammers.map(s => s.letter))].sort();
     this.computeStats();
     this.applyFilters();
   }
@@ -74,15 +42,8 @@ export class AppComponent implements OnInit {
 
   applyFilters() {
     let result = [...this.allScammers];
-
-    if (this.filterTag !== 'all') {
-      result = result.filter(s => s.tag === this.filterTag);
-    }
-
-    if (this.filterLetter !== 'all') {
-      result = result.filter(s => s.letter === this.filterLetter);
-    }
-
+    if (this.filterTag !== 'all') result = result.filter(s => s.tag === this.filterTag);
+    if (this.filterLetter !== 'all') result = result.filter(s => s.letter === this.filterLetter);
     if (this.searchQuery.trim()) {
       const q = this.searchQuery.trim().toLowerCase();
       result = result.filter(s =>
@@ -90,7 +51,6 @@ export class AppComponent implements OnInit {
         (s.detail ?? '').toLowerCase().includes(q)
       );
     }
-
     this.filteredScammers = result;
     this.expandedIndex = null;
   }
@@ -103,13 +63,7 @@ export class AppComponent implements OnInit {
     return tag === 'W' ? 'Waspada' : 'Scammer';
   }
 
-  getTagClass(tag: string): string {
-    return tag === 'W' ? 'warn' : 'scam';
-  }
-
-  onSearch() {
-    this.applyFilters();
-  }
+  onSearch() { this.applyFilters(); }
 
   clearSearch() {
     this.searchQuery = '';
@@ -120,6 +74,6 @@ export class AppComponent implements OnInit {
     this.searchQuery = '';
     this.filterTag = 'all';
     this.filterLetter = 'all';
-    this.loadData();
+    this.applyFilters();
   }
 }
