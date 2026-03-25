@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/rucoy-scammer-tracker/browser",
+  "outputDirectory": "dist/rucoy-scammer-tracker",
   "framework": null,
   "engines": {
     "node": "20.x"
